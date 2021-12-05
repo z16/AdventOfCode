@@ -1,0 +1,5 @@
+.vs/
+AdventOfCode/bin/
+AdventOfCode/obj/
+AdventOfCode/Inputs/
+AdventOfCode/Properties/launchSettings.json
