@@ -35,9 +35,13 @@ namespace AdventOfCode {
 						var dayPath = Path.Combine(inputs, year, method.DeclaringType!.Name, "Input");
 						var inputPath = File.Exists(methodPath) ? methodPath : dayPath;
 						var parameterType = method.GetParameters().Single().ParameterType;
+						if (parameterType == typeof(String)) {
+							return (await File.ReadAllTextAsync(inputPath)).Trim();
+						}
+
 						var enumerable = parameterType.GetInterfaces().FirstOrDefault(@interface => @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IEnumerable<>));
 						if (enumerable == null) {
-							return Convert(await File.ReadAllTextAsync(inputPath), parameterType);
+							return Convert((await File.ReadAllTextAsync(inputPath)).Trim(), parameterType);
 						}
 
 						var lineType = enumerable.GetGenericArguments().Single();
