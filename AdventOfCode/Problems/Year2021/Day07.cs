@@ -4,7 +4,7 @@ using z16.Core;
 
 namespace AdventOfCode.Problems.Year2021;
 
-internal static class Day7 {
+internal static class Day07 {
 	public static Int32 Part1(String line) =>
 		Check(line, (crab, target) => Math.Abs(target - crab));
 

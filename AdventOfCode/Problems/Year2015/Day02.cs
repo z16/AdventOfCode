@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace AdventOfCode.Problems.Year2015;
 
-internal static class Day2 {
+internal static class Day02 {
 	public static Int32 Part1(String[] array) =>
 		array
 			.Select(line => line.Split('x').Select(Int32.Parse).ToArray())

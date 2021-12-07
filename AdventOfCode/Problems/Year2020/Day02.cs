@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Problems.Year2020;
 
-internal static class Day2 {
+internal static class Day02 {
 	private static readonly Regex LinePattern = new Regex(@"^(?<first>\d+)-(?<second>\d+) (?<char>\w): (?<password>\w+)$", RegexOptions.Compiled);
 
 	public static Int32 Part1(String[] lines) =>

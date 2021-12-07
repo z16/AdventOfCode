@@ -4,7 +4,7 @@ using z16.Core;
 
 namespace AdventOfCode.Problems.Year2021;
 
-internal static class Day6 {
+internal static class Day06 {
 	public static Int64 Part1(String line) =>
 		CountAll(line, 80);
 

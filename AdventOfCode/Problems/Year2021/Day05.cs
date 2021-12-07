@@ -5,7 +5,7 @@ using z16.Core;
 
 namespace AdventOfCode.Problems.Year2021;
 
-internal static class Day5 {
+internal static class Day05 {
 	public static Int32 Part1(String[] array) =>
 		Check(array, line => line.From.X == line.To.X || line.From.Y == line.To.Y);
 

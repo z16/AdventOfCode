@@ -6,7 +6,7 @@ using z16.Core;
 
 namespace AdventOfCode.Problems.Year2015;
 
-internal static class Day4 {
+internal static class Day04 {
 	public static Int32 Part1(String line) =>
 		Check(line, 5);
 

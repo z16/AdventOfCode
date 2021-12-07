@@ -5,7 +5,7 @@ using z16.Core;
 
 namespace AdventOfCode.Problems.Year2015;
 
-internal static class Day9 {
+internal static class Day09 {
 	public static Int32 Part1(String[] array) =>
 		Graph.Parse(array).ShortestHamiltonianPath();
 

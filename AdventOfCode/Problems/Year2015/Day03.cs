@@ -7,7 +7,7 @@ using Point = z16.Core.Vector2<System.Int32>;
 
 namespace AdventOfCode.Problems.Year2015;
 
-internal static class Day3 {
+internal static class Day03 {
 	public static Int32 Part1(String line) =>
 		Check(line).Distinct().Count();
 

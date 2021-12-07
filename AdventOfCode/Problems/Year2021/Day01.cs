@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace AdventOfCode.Problems.Year2021;
 
-internal static class Day1 {
+internal static class Day01 {
 	public static Int32 Part1(Int32[] array) =>
 		CountDecreases(array);
 

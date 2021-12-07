@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace AdventOfCode.Problems.Year2020;
 
-internal static class Day3 {
+internal static class Day03 {
 	public static Int32 Part1(Tile[][] field) => CountSlope(field, 3, 1);
 
 	public static Decimal Part2(Tile[][] field) => new[] {

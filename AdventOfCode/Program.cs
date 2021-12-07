@@ -31,9 +31,7 @@ namespace AdventOfCode {
 
 					static async Task<Object> GetArgument(MethodInfo method, String inputs) {
 						var year = method.DeclaringType!.FullName!.Split('.').ElementAt(2);
-						var methodPath = Path.Combine(inputs, year, method.DeclaringType!.Name, method.Name);
-						var dayPath = Path.Combine(inputs, year, method.DeclaringType!.Name, "Input");
-						var inputPath = File.Exists(methodPath) ? methodPath : dayPath;
+						var inputPath = Path.Combine(inputs, year, method.DeclaringType!.Name);
 						var parameterType = method.GetParameters().Single().ParameterType;
 						if (parameterType == typeof(String)) {
 							return (await File.ReadAllTextAsync(inputPath)).Trim();

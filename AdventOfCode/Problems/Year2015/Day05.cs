@@ -5,7 +5,7 @@ using MoreLinq;
 
 namespace AdventOfCode.Problems.Year2015;
 
-internal static class Day5 {
+internal static class Day05 {
 	public static Int32 Part1(String[] array) =>
 		array.Count(line => line.Count(Vowels.Contains) >= 3 && line.Window(2).Any(characters => characters[0] == characters[1]) && !Forbidden.Any(line.Contains));
 

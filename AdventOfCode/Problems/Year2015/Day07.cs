@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace AdventOfCode.Problems.Year2015;
 
-internal static class Day7 {
+internal static class Day07 {
 	public static UInt16 Part1(String[] array) =>
 		Check(Terms(array), new Dictionary<String, UInt16>());
 

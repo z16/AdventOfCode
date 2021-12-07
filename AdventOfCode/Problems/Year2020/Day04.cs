@@ -6,7 +6,7 @@ using z16.Core;
 
 namespace AdventOfCode.Problems.Year2020;
 
-internal static class Day4 {
+internal static class Day04 {
 	public static Int32 Part1(String[] lines) => ParseCredentials(lines).Count(credentials => credentials.HasPassportFields);
 
 	public static Int32 Part2(String[] lines) => ParseCredentials(lines).Count(credentials => credentials.HasValidPassportFields);

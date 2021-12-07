@@ -4,7 +4,7 @@ using z16.Core;
 
 namespace AdventOfCode.Problems.Year2021;
 
-internal static class Day3 {
+internal static class Day03 {
 	public static Int32 Part1(String[] array) {
 		var characters = array.First().Length;
 		var gamma = array

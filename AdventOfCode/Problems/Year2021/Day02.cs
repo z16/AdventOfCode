@@ -4,7 +4,7 @@ using z16.Core;
 
 namespace AdventOfCode.Problems.Year2021;
 
-internal static class Day2 {
+internal static class Day02 {
 	public static Int32 Part1(String[] array) {
 		var (x, y) = array
 			.Select(line => line.Split(' '))

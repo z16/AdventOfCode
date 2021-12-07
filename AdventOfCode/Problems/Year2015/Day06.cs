@@ -5,7 +5,7 @@ using Point = z16.Core.Vector2<System.Int32>;
 
 namespace AdventOfCode.Problems.Year2015;
 
-internal static class Day6 {
+internal static class Day06 {
 	public static Int32 Part1(String[] array) =>
 		Check(array, BooleanActions).Count(value => value);
 
