@@ -7,14 +7,13 @@ namespace AdventOfCode.Problems.Year2021;
 
 internal static class Day08 {
 	public static Int32 Part1(String[] array) =>
-		array.Select(line => line.Split("| ")[1]).SelectMany(output => output.Split(' ')).Count(token => token.Length.OneOf(2, 3, 4, 7));
+		array.Select(line => line.SplitEnumerable("| ").ElementAt(1)).SelectMany(output => output.Split(' ')).Count(token => token.Length.OneOf(2, 3, 4, 7));
 
 	public static Int32 Part2(String[] array) =>
-		array.Select(line => line.Split(" | ")).Sum(Parse);
+		array.Select(line => line.SplitEnumerable(" | ")).Sum(Parse);
 
-	private static Int32 Parse(String[] array) {
-		var input = array[0].Split(' ');
-		var output = array[1].Split(' ');
+	private static Int32 Parse(IEnumerable<String> io) {
+		var (input, output) = io.Select(part => part.SplitEnumerable(' ')).Tuple2();
 
 		var mapping = new Dictionary<Int32, String>() {
 			[1] = input.First(token => token.Length == 2),
@@ -29,7 +28,8 @@ internal static class Day08 {
 		mapping[0] = Find(6, mapping[1], 2);
 		mapping[6] = Find(6, mapping[1], 1);
 
-		return output.Reverse().Enumerate().Aggregate(0, (acc, value) => acc + (Int32) Math.Pow(10, value.Index) * mapping.First(kvp => kvp.Value.SequenceEqual(value.Value.Order())).Key);
+		var reverse = mapping.ToDictionary(kvp => kvp.Value.Order(), kvp => kvp.Key);
+		return output.Reverse().Enumerate().Aggregate(0, (acc, value) => acc + (Int32) Math.Pow(10, value.Index) * reverse.First(kvp => kvp.Key.SequenceEqual(value.Value.Order())).Value);
 
 		String Find(Int32 length, String substring, Int32 matches) =>
 			input!.First(token => !mapping.ContainsValue(token) && token.Length == length && token.Intersect(substring).Count() == matches);
