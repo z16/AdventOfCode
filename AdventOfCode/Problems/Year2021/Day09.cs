@@ -14,7 +14,7 @@ internal static class Day09 {
 		Prepare(array).Let(CheckBasin);
 
 	private static Int32[,] Prepare(String[] array) =>
-		array.Select(line => line.Select(character => character - '0').ToArray()).ToArray().To2DArray();
+		array.Select(line => line.Select(character => character - '0')).To2DArray();
 
 	private static Int32 CheckRisk(Int32[,] array) =>
 		array.Indices().Where(array.IsSink).Sum(point => array.Get(point) + 1);
@@ -26,21 +26,19 @@ internal static class Day09 {
 			.Select(basin => basin.Count)
 			.OrderDescending()
 			.Take(3)
-			.Aggregate(1, (acc, value) => acc * value);
+			.Multiply();
 
 	private static HashSet<Point> GrowBasin(Int32[,] array, HashSet<Point> basin) =>
 		basin
 			.SelectMany(point => array.ValidNeighbors(point).Where(neighbor => !basin.Contains(neighbor) && array.Get(neighbor) != 9))
 			.Concat(basin)
 			.ToHashSet()
-			.Let(grown => grown.Count > basin.Count
-				? GrowBasin(array, grown)
-				: basin);
+			.Let(grown => grown.Count == basin.Count ? basin : GrowBasin(array, grown));
 
 	private static IEnumerable<Point> ValidNeighbors(this Int32[,] array, Point point) =>
 		new Point[] { (0, 1), (1, 0), (0, -1), (-1, 0) }
 			.Select(offset => offset + point)
-			.Where(neighbor => neighbor.X >= 0 && neighbor.Y >= 0 && neighbor.X < array.GetLength(0) && neighbor.Y < array.GetLength(1));
+			.Where(array.InBounds);
 
 	private static Boolean IsSink(this Int32[,] array, Point point) =>
 		array
