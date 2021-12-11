@@ -15,7 +15,7 @@ internal static class Day11 {
 		state.Array
 			.Let(array => array.Apply(value => value + 1))
 			.Let(Flash, array => array.Enumerate().Any(value => value >= 10))
-			.Let(array => state with { Flashes = state.Flashes + array.Enumerate().Count(value => value == 0), Round = state.Round + 1 });
+			.Let(array => new State(array, state.Flashes + array.Enumerate().Count(value => value == 0), state.Round + 1));
 
 	private static Int32[,] Flash(Int32[,] array) =>
 		array.Apply((point, value) => value == 0 ? 0 : value >= 10 ? 0 : value + array.Neighbors(point).Select(array.Get).Count(value => value >= 10));
