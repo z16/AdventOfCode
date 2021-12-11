@@ -30,19 +30,14 @@ internal static class Day09 {
 
 	private static HashSet<Point> GrowBasin(Int32[,] array, HashSet<Point> basin) =>
 		basin
-			.SelectMany(point => array.ValidNeighbors(point).Where(neighbor => !basin.Contains(neighbor) && array.Get(neighbor) != 9))
+			.SelectMany(point => array.AxisNeighbors(point).Where(neighbor => !basin.Contains(neighbor) && array.Get(neighbor) != 9))
 			.Concat(basin)
 			.ToHashSet()
 			.Let(grown => grown.Count == basin.Count ? basin : GrowBasin(array, grown));
 
-	private static IEnumerable<Point> ValidNeighbors(this Int32[,] array, Point point) =>
-		new Point[] { (0, 1), (1, 0), (0, -1), (-1, 0) }
-			.Select(offset => offset + point)
-			.Where(array.InBounds);
-
 	private static Boolean IsSink(this Int32[,] array, Point point) =>
 		array
-			.ValidNeighbors(point)
+			.AxisNeighbors(point)
 			.Select(neighbor => array[neighbor.X, neighbor.Y])
 			.All(value => value > array.Get(point));
 }
