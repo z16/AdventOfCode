@@ -35,21 +35,51 @@ namespace AdventOfCode {
 				Console.WriteLine();
 			}
 
-			static async Task<Object> GetArgument(MethodInfo method, String inputs) {
+			static async Task<Object> GetArgument(MethodInfo method, String input) {
 				var parameterType = method.GetParameters().Single().ParameterType;
 				if (parameterType == typeof(String)) {
-					return (await File.ReadAllTextAsync(inputs)).Trim();
+					return await ReadString(input);
 				}
 
-				var enumerable = parameterType.GetInterfaces().FirstOrDefault(@interface => @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+				if (parameterType.IsArray && parameterType.GetArrayRank() == 2) {
+					return await Read2dArray(parameterType, input);
+				}
+
+				var enumerable = GetEnumerable(parameterType);
 				if (enumerable == null) {
-					return Convert((await File.ReadAllTextAsync(inputs)).Trim(), parameterType);
+					return await ReadObject(parameterType, input);
 				}
 
 				var lineType = enumerable.GetGenericArguments().Single();
-				var nestedEnumerable = lineType.GetInterfaces().FirstOrDefault(@interface => @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+				var nestedEnumerable = GetEnumerable(lineType);
 				if (lineType == typeof(String) || nestedEnumerable == null) {
-					var lines = await File.ReadAllLinesAsync(inputs);
+					return await ReadArray(lineType, input);
+				}
+
+				return await ReadJaggedArray(nestedEnumerable, lineType, input);
+
+				static async Task<Object> ReadString(String input) =>
+					(await File.ReadAllTextAsync(input)).Trim();
+
+				static async Task<Object> Read2dArray(Type parameterType, String input) {
+					var valueType = parameterType.GetElementType()!;
+					var chars = (await File.ReadAllLinesAsync(input)).To2DArray();
+					var length1 = chars.GetLength(0);
+					var length2 = chars.GetLength(1);
+					var array = Array.CreateInstance(valueType, new[] { length1, length2 });
+					for (var i = 0; i < length1; ++i) {
+						for (var j = 0; j < length2; ++j) {
+							array.SetValue(Convert(chars[i, j], valueType), i, j);
+						}
+					}
+					return array;
+				}
+
+				static async Task<Object> ReadObject(Type parameterType, String input) =>
+					Convert((await File.ReadAllTextAsync(input)).Trim(), parameterType);
+
+				static async Task<Object> ReadArray(Type lineType, String input) {
+					var lines = await File.ReadAllLinesAsync(input);
 					var array = Array.CreateInstance(lineType, lines.Length);
 					for (var i = 0; i < lines.Length; ++i)
 					{
@@ -58,29 +88,36 @@ namespace AdventOfCode {
 
 					return array;
 				}
-
-				var charType = nestedEnumerable.GetGenericArguments().Single();
-				var chars = (await File.ReadAllLinesAsync(inputs)).Select(line => line.ToArray()).ToArray();
-				var lineLength = chars.First().Length;
-				var matrix = Array.CreateInstance(lineType, chars.Length);
-				for (var i = 0; i < chars.Length; ++i) {
-					var array = Array.CreateInstance(charType, lineLength);
-					for (var j = 0; j < lineLength; ++j)
-					{
-						array.SetValue(Convert(chars[i][j], charType), j);
+				static async Task<Object> ReadJaggedArray(Type nestedEnumerable, Type lineType, String input) {
+					var charType = nestedEnumerable.GetGenericArguments().Single();
+					var chars = (await File.ReadAllLinesAsync(input)).Select(line => line.ToArray()).ToArray();
+					var lineLength = chars.First().Length;
+					var matrix = Array.CreateInstance(lineType, chars.Length);
+					for (var i = 0; i < chars.Length; ++i) {
+						var array = Array.CreateInstance(charType, lineLength);
+						for (var j = 0; j < lineLength; ++j) {
+							array.SetValue(Convert(chars[i][j], charType), j);
+						}
+						matrix.SetValue(array, i);
 					}
-					matrix.SetValue(array, i);
+					return matrix;
 				}
-				return matrix;
 
 				static Object Convert(Object value, Type type) =>
 					type.IsEnum
 						? Enum.ToObject(type, value)
-						: ((IConvertible)value).ToType(type, null);
+						: type != typeof(Char) && value.GetType() == typeof(Char) && type.GetMethod("Parse", new[] { typeof(String) }) is MethodInfo parse
+							? parse.Invoke(null, new[] { value.ToString() })!
+							: type == value.GetType()
+								? value
+								:  ((IConvertible) value).ToType(type, null);
+
+				static Type? GetEnumerable(Type type) =>
+					type.GetInterfaces().FirstOrDefault(compare => compare.IsGenericType && compare.GetGenericTypeDefinition() == typeof(IEnumerable<>));
 			}
 
-			static async Task<Object?> GetResult(MethodInfo method, String outputs) {
-				var resultString = (await File.ReadAllTextAsync(outputs)).Trim();
+			static async Task<Object?> GetResult(MethodInfo method, String output) {
+				var resultString = (await File.ReadAllTextAsync(output)).Trim();
 				if (resultString == String.Empty) {
 					return null;
 				}
