@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,8 +11,15 @@ namespace AdventOfCode {
 	internal class Program {
 		private static async Task Main(String data) {
 			Console.SetCursorPosition(10, Console.GetCursorPosition().Top);
-			Console.Write("Part 1".PadLeft(16));
-			Console.Write("Part 2".PadLeft(16));
+			Console.Write("Part 1".PadLeft(20).PadRight(24));
+			Console.Write("Part 2".PadLeft(20).PadRight(24));
+			Console.WriteLine();
+
+			Console.SetCursorPosition(10, Console.GetCursorPosition().Top);
+			Console.Write("Result".PadLeft(16));
+			Console.Write("Time".PadLeft(8));
+			Console.Write("Result".PadLeft(16));
+			Console.Write("Time".PadLeft(8));
 			Console.WriteLine();
 
 			var lastYear = String.Empty;
@@ -32,6 +40,7 @@ namespace AdventOfCode {
 				var expected = (await Task.WhenAll(parts.Select(async part => part == null ? null : await GetResult(part, Path.Combine(data, "Outputs", year, day.Name, part.Name))))).ToArray();
 				RunPart(parts[0], input, expected[0]);
 				RunPart(parts[1], input, expected[1]);
+
 				Console.WriteLine();
 			}
 
@@ -88,6 +97,7 @@ namespace AdventOfCode {
 
 					return array;
 				}
+
 				static async Task<Object> ReadJaggedArray(Type nestedEnumerable, Type lineType, String input) {
 					var charType = nestedEnumerable.GetGenericArguments().Single();
 					var chars = (await File.ReadAllLinesAsync(input)).Select(line => line.ToArray()).ToArray();
@@ -133,11 +143,13 @@ namespace AdventOfCode {
 
 			static void RunPart(MethodInfo? method, Object input, Object? expected) {
 				if (method == null) {
-					Console.Write(new String(' ', 16));
+					Console.Write(new String(' ', 24));
 					return;
 				}
 
+				var sw = Stopwatch.StartNew();
 				var result = method.Invoke(null, new[] { input })!;
+				var time = sw.Elapsed;
 
 				var backup = Console.ForegroundColor;
 				if (expected != null) {
@@ -145,6 +157,7 @@ namespace AdventOfCode {
 				}
 				Console.Write($"{result,16}");
 				Console.ForegroundColor = backup;
+				Console.Write($"{time,8:ss\\.fff}");
 			}
 		}
 	}
