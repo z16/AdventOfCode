@@ -21,7 +21,7 @@ internal static class Day12 {
 				Start: graph.Nodes.First(node => node.Data.Name == "start"),
 				Current: graph.Nodes.First(node => node.Data.Name == "start"),
 				End: graph.Nodes.First(node => node.Data.Name == "end"),
-				Visited: new List<Node>(),
+				Visited: new HashSet<Node>(),
 				Revisited: 0,
 				Finished: false
 			))
@@ -34,7 +34,7 @@ internal static class Day12 {
 						.Where(edge => edge.To != state.Start && (edge.To.Data.Big || !state.Visited.Contains(edge.To.Data) || state.Revisited < revisits))
 						.Select(edge => state with {
 							Current = edge.To,
-							Visited = new List<Node>(state.Visited.Concat(edge.From.Data.Yield())),
+							Visited = new HashSet<Node>(state.Visited.Concat(edge.From.Data.Yield())),
 							Revisited = state.Revisited + (!edge.To.Data.Big && state.Visited.Contains(edge.To.Data) ? 1 : 0),
 							Finished = edge.To == state.End
 						})
