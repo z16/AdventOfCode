@@ -2,53 +2,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using z16.Core;
+using Node = z16.Core.Graph<System.String, System.Int32>.Node;
 
 namespace AdventOfCode.Problems.Year2015;
 
 internal static class Day09 {
 	public static Int32 Part1(String[] array) =>
-		Graph.Parse(array).ShortestHamiltonianPath();
+		Parse(array).HamiltonianPath(Enumerable.Min);
 
 	public static Int32 Part2(String[] array) =>
-		Graph.Parse(array).LongestHamiltonianPath();
+		Parse(array).HamiltonianPath(Enumerable.Max);
 
-	private readonly record struct Edge(Node From, Node To, Int32 Distance = 0) {
-		public Boolean Connects(Node node) =>
-			From == node || To == node;
+	public static Graph<String, Int32> Parse(String[] array) =>
+		Graph.FromEdgesUndirected(array
+			.Select(line => line.Split(" = "))
+			.SelectMany(data => data[0].Split(" to ").Let(connection => new[] {(
+				From: connection[0],
+				To: connection[1],
+				Distance: Int32.Parse(data[1])
+			)}))
+		);
 
-		public Node Other(Node end) =>
-			end == From ? To : From;
+	public static Int32 HamiltonianPath(this Graph<String, Int32> graph, Func<IEnumerable<Node>, Func<Node, Int32>, Int32> minmax) {
+		var nodes = graph.Nodes;
+		var edges = graph.Edges;
+		return minmax(nodes, node => PathFromNode(node, nodes.Except(node.Yield()).ToArray()));
 
-		public Boolean Compare(Edge other) =>
-			From == other.From && To == other.To || From == other.To && To == other.From;
-	}
-
-	private readonly record struct Node(String Name);
-
-	private readonly record struct Graph(Node[] Nodes, Edge[] Edges) {
-		public static Graph Parse(String[] array) {
-			var edgeData = array.Select(line => line.Split(" = ")).Select(data => (Connection: data[0].Split(" to "), Distance: Int32.Parse(data[1]))).ToArray();
-			var nodes = edgeData.SelectMany(data => data.Connection).Distinct().Select(name => new Node(name)).ToArray();
-			var nodeMap = nodes.ToDictionary(node => node.Name, node => node);
-			var edges = edgeData.Select(data => new Edge(nodeMap[data.Connection[0]], nodeMap[data.Connection[1]], data.Distance)).ToArray();
-			return new(nodes, edges);
-		}
-
-		public Int32 ShortestHamiltonianPath() =>
-			HamiltonianPath(Enumerable.Min);
-
-		public Int32 LongestHamiltonianPath() =>
-			HamiltonianPath(Enumerable.Max);
-
-		public Int32 HamiltonianPath(Func<IEnumerable<Node>, Func<Node, Int32>, Int32> minmax) {
-			var nodes = Nodes;
-			var edges = Edges;
-			return minmax(nodes, node => PathFromNode(node, nodes.Except(node.Yield()).ToArray()));
-
-			Int32 PathFromNode(Node start, IEnumerable<Node> remaining) =>
-				remaining.Any()
-					? minmax(remaining, node => edges.First(edge => edge.Compare(new(start, node, 0))).Distance + PathFromNode(node, remaining.Except(node.Yield())))
-					: 0;
-		}
+		Int32 PathFromNode(Node start, Node[] remaining) =>
+			remaining.Any()
+				? minmax(remaining, node => graph.EdgeMap[(start, node)].Data + PathFromNode(node, remaining.Except(node.Yield()).ToArray()))
+				: 0;
 	}
 }
