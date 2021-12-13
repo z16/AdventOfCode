@@ -14,35 +14,37 @@ internal static class Day12 {
 
 	private static Int32 Count(String[] array, Int32 revisits) =>
 		array
-			.Select(line => line.Split('-').Let(split => (From: ParseNode(split[0]), To: ParseNode(split[1]))))
+			.Select(line => line.Split('-').Let(split => (From: (Name: split[0], Big: split[0].All(Char.IsUpper)), To: (Name: split[1], Big: split[1].All(Char.IsUpper)))))
 			.Let(Graph.FromEdgesUndirected)
 			.Let(graph => (
-				Graph: graph,
+				Count: 0,
 				Start: graph.Nodes.First(node => node.Data.Name == "start"),
-				Current: graph.Nodes.First(node => node.Data.Name == "start"),
 				End: graph.Nodes.First(node => node.Data.Name == "end"),
-				Visited: new HashSet<Node>(),
-				Revisited: 0,
-				Finished: false
+				Paths: new[] {(
+					Current: graph.Nodes.First(node => node.Data.Name == "start"),
+					Visited: new HashSet<(String, Boolean)>(),
+					Revisited: 0
+				)}
 			))
-			.Yield()
-			.ToArray()
-			.Let(states => states
-				.Where(state => state.Finished)
-				.Concat(states.Where(state => !state.Finished).SelectMany(state =>
-					state.Current.Outgoing
-						.Where(edge => edge.To != state.Start && (edge.To.Data.Big || !state.Visited.Contains(edge.To.Data) || state.Revisited < revisits))
-						.Select(edge => state with {
-							Current = edge.To,
-							Visited = new HashSet<Node>(state.Visited.Concat(edge.From.Data.Yield())),
-							Revisited = state.Revisited + (!edge.To.Data.Big && state.Visited.Contains(edge.To.Data) ? 1 : 0),
-							Finished = edge.To == state.End
-						})
-				)).ToArray(), states => states.Any(state => !state.Finished))
-			.Length;
-
-	private static Node ParseNode(String name) =>
-		new(name, name.All(Char.IsUpper));
-
-	private readonly record struct Node(String Name, Boolean Big);
+			.Let(state => state.Paths
+				.SelectMany(path => path.Current.Outgoing
+					.Where(edge => edge.To != state.Start && (edge.To.Data.Big || !path.Visited.Contains(edge.To.Data) || path.Revisited < revisits))
+					.Select(edge => path with {
+						Current = edge.To,
+						Visited = new HashSet<(String, Boolean)>(path.Visited.Concat(edge.From.Data.Yield())),
+						Revisited = path.Revisited + (!edge.To.Data.Big && path.Visited.Contains(edge.To.Data) ? 1 : 0),
+					})
+				)
+				.ToArray()
+				.Let(total => total
+					.Where(path => path.Current != state.End)
+					.ToArray()
+					.Let(unfinished => state with {
+						Count = state.Count + (total.Length - unfinished.Length),
+						Paths = unfinished
+					})
+				),
+				state => state.Paths.Any()
+			)
+			.Count;
 }
