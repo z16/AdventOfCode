@@ -44,7 +44,7 @@ internal static class Day13 {
 			.Dots;
 
 	private static readonly (Char Letter, Point[] Dots)[] Letters = new[] {
-		('A', new Point[]{
+		('A', new Point[] {
 			new(1, 0),
 			new(2, 0),
 			new(0, 1),
@@ -60,9 +60,24 @@ internal static class Day13 {
 			new(0, 5),
 			new(3, 5),
 		}),
-		//('B', new Point[]{
-		//}),
-		('C', new Point[]{
+		('B', new Point[] {
+			new(0, 0),
+			new(1, 0),
+			new(2, 0),
+			new(0, 1),
+			new(3, 1),
+			new(0, 2),
+			new(1, 2),
+			new(2, 2),
+			new(0, 3),
+			new(3, 3),
+			new(0, 4),
+			new(3, 4),
+			new(0, 5),
+			new(1, 5),
+			new(2, 5),
+		}),
+		('C', new Point[] {
 			new(1, 0),
 			new(2, 0),
 			new(0, 1),
@@ -74,9 +89,9 @@ internal static class Day13 {
 			new(1, 5),
 			new(2, 5),
 		}),
-		//('D', new Point[]{
+		//('D', new Point[] {
 		//}),
-		('E', new Point[]{
+		('E', new Point[] {
 			new(0, 0),
 			new(1, 0),
 			new(2, 0),
@@ -92,7 +107,7 @@ internal static class Day13 {
 			new(2, 5),
 			new(3, 5),
 		}),
-		('F', new Point[]{ //
+		('F', new Point[] {
 			new(0, 0),
 			new(1, 0),
 			new(2, 0),
@@ -105,7 +120,7 @@ internal static class Day13 {
 			new(0, 4),
 			new(0, 5),
 		}),
-		('G', new Point[]{
+		('G', new Point[] {
 			new(1, 0),
 			new(2, 0),
 			new(0, 1),
@@ -120,7 +135,7 @@ internal static class Day13 {
 			new(2, 5),
 			new(3, 5),
 		}),
-		('H', new Point[]{
+		('H', new Point[] {
 			new(0, 0),
 			new(3, 0),
 			new(0, 1),
@@ -136,11 +151,19 @@ internal static class Day13 {
 			new(0, 5),
 			new(3, 5),
 		}),
-		//('I', new Point[]{
+		//('I', new Point[] {
 		//}),
-		//('J', new Point[]{
-		//}),
-		('K', new Point[]{
+		('J', new Point[] {
+			new(2, 0),
+			new(3, 1),
+			new(3, 2),
+			new(3, 3),
+			new(0, 4),
+			new(3, 4),
+			new(1, 5),
+			new(2, 5),
+		}),
+		('K', new Point[] {
 			new(0, 0),
 			new(3, 0),
 			new(0, 1),
@@ -154,7 +177,7 @@ internal static class Day13 {
 			new(0, 5),
 			new(3, 5),
 		}),
-		('L', new Point[]{ //
+		('L', new Point[] {
 			new(0, 0),
 			new(0, 1),
 			new(0, 2),
@@ -165,11 +188,11 @@ internal static class Day13 {
 			new(2, 5),
 			new(3, 5),
 		}),
-		//('M', new Point[]{
+		//('M', new Point[] {
 		//}),
-		//('N', new Point[]{
+		//('N', new Point[] {
 		//}),
-		('O', new Point[]{ //
+		('O', new Point[] { //
 			new(1, 0),
 			new(2, 0),
 			new(0, 1),
@@ -183,7 +206,7 @@ internal static class Day13 {
 			new(1, 5),
 			new(2, 5),
 		}),
-		('P', new Point[]{
+		('P', new Point[] {
 			new(0, 0),
 			new(1, 0),
 			new(2, 0),
@@ -197,15 +220,29 @@ internal static class Day13 {
 			new(0, 4),
 			new(0, 5),
 		}),
-		//('Q', new Point[]{
+		//('Q', new Point[] {
 		//}),
-		//('R', new Point[]{
+		('R', new Point[] {
+			new(0, 0),
+			new(1, 0),
+			new(2, 0),
+			new(0, 1),
+			new(3, 1),
+			new(0, 2),
+			new(3, 2),
+			new(0, 3),
+			new(1, 3),
+			new(2, 3),
+			new(0, 4),
+			new(2, 4),
+			new(0, 5),
+			new(3, 5),
+		}),
+		//('S', new Point[] {
 		//}),
-		//('S', new Point[]{
+		//('T', new Point[] {
 		//}),
-		//('T', new Point[]{
-		//}),
-		('U', new Point[]{
+		('U', new Point[] {
 			new(0, 0),
 			new(3, 0),
 			new(0, 1),
@@ -219,15 +256,15 @@ internal static class Day13 {
 			new(1, 5),
 			new(2, 5),
 		}),
-		//('V', new Point[]{
+		//('V', new Point[] {
 		//}),
-		//('W', new Point[]{
+		//('W', new Point[] {
 		//}),
-		//('X', new Point[]{
+		//('X', new Point[] {
 		//}),
-		//('Y', new Point[]{
+		//('Y', new Point[] {
 		//}),
-		('Z', new Point[]{
+		('Z', new Point[] {
 			new(0, 0),
 			new(1, 0),
 			new(2, 0),
