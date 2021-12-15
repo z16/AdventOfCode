@@ -23,13 +23,11 @@ internal static class Day14 {
 					(split[1] + split[0].Last(), 1m),
 					(split[0], -1m),
 				})
-				.Let(rules => array[0]
+				.Let(rules => $" {array[0]} "
 					.Window(2)
 					.Select(window => window.JoinToString())
 					.Group()
-					.ToDictionary(group => group.First(), group => (Decimal) group.Count())
-					.With(" " + array[0].First(), 1m)
-					.With(array[0].Last() + " ", 1m)
+					.ToDictionary(group => group.Key, group => (Decimal) group.Count())
 					.Let(pairs => rules
 						.SelectMany(rule => pairs.GetValueOrDefault(rule.Key).Let(count => rule.Value.Select(kvp => KeyValuePair.Create(kvp.Combination, count * kvp.Count))))
 						.Concat(pairs)
