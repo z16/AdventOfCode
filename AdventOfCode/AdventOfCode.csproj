@@ -5,13 +5,13 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<EnablePreviewFeatures>True</EnablePreviewFeatures>
+		<EnablePreviewFeatures>true</EnablePreviewFeatures>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="morelinq" Version="3.3.2"/>
-		<PackageReference Include="System.CommandLine.DragonFruit" Version="0.3.0-alpha.20574.7"/>
-		<PackageReference Include="System.Runtime.Experimental" Version="6.0.0"/>
+		<PackageReference Include="morelinq" Version="3.3.2" />
+		<PackageReference Include="System.CommandLine.DragonFruit" Version="0.3.0-alpha.21216.1" />
+		<PackageReference Include="System.Runtime.Experimental" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
