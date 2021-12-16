@@ -68,7 +68,7 @@ internal static class Day16 {
 			);
 
 	private static Int32 ToInteger(this IEnumerable<Int32> bits, Int32 size) =>
-		bits.Take(size).ToArray().ToType<Int32>();
+		bits.Take(size).ToType<Int32>();
 
 	private static T ToType<T>(this IEnumerable<Int32> bits) where T : INumber<T> =>
 		bits.Aggregate(default(T)!, (acc, value) => acc * T.Create(2)! + T.Create(value)!);
