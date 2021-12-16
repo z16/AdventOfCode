@@ -39,10 +39,39 @@ internal class Program {
 			var parts = new[] { day.GetMethod("Part1"), day.GetMethod("Part2") };
 			var input = await GetArgument(parts.First(part => part != null)!, Path.Combine(data, "Inputs", year, day.Name));
 			var expected = (await Task.WhenAll(parts.Select(async part => part == null ? null : await GetResult(part, Path.Combine(data, "Outputs", year, day.Name, part.Name))))).ToArray();
-			RunPart(parts[0], input, expected[0]);
-			RunPart(parts[1], input, expected[1]);
+
+			await using var writer1 = new StringWriter();
+			await using var writer2 = new StringWriter();
+
+			var ex1 = RunPart(parts[0], input, expected[0], writer1);
+			var ex2 = RunPart(parts[1], input, expected[1], writer2);
 
 			Console.WriteLine();
+
+			foreach (var (writer, index) in new[] { writer1, writer2 }.Enumerate()) {
+				var output = writer.ToString();
+				if (output != String.Empty) {
+					var backup = Console.ForegroundColor;
+					Console.ForegroundColor = ConsoleColor.Cyan;
+					Console.WriteLine();
+					Console.WriteLine($"Output from part {index + 1}:");
+					Console.Write(output.Split(Environment.NewLine).Select(line => $"    {line}").JoinToString(Environment.NewLine));
+					Console.WriteLine();
+					Console.ForegroundColor = backup;
+				}
+			}
+
+			foreach (var (ex, index) in new[] { ex1, ex2 }.Enumerate()) {
+				if (ex != null) {
+					var backup = Console.ForegroundColor;
+					Console.ForegroundColor = ConsoleColor.Red;
+					Console.WriteLine();
+					Console.WriteLine($"Error during part {index + 1}: {ex.Message}");
+					Console.WriteLine($"{ex.StackTrace}");
+					Console.WriteLine();
+					Console.ForegroundColor = backup;
+				}
+			}
 		}
 
 		static async Task<Object> GetArgument(MethodInfo method, String input) {
@@ -141,23 +170,39 @@ internal class Program {
 			return parse!.Invoke(null, new[] { resultString });
 		}
 
-		static void RunPart(MethodInfo? method, Object input, Object? expected) {
+		static Exception? RunPart(MethodInfo? method, Object input, Object? expected, TextWriter writer) {
 			if (method == null) {
 				Console.Write(new String(' ', 24));
-				return;
+				return null;
 			}
 
-			var sw = Stopwatch.StartNew();
-			var result = method.Invoke(null, new[] { input })!;
-			var time = sw.Elapsed;
-
+			var stdOut = Console.Out;
 			var backup = Console.ForegroundColor;
-			if (expected != null) {
-				Console.ForegroundColor = result.Equals(expected) ? ConsoleColor.Green : ConsoleColor.Red;
+
+			try {
+				Console.SetOut(writer);
+				var sw = Stopwatch.StartNew();
+				var result = method.Invoke(null, new[] { input })!;
+				var time = sw.Elapsed;
+				Console.SetOut(stdOut);
+
+				if (expected != null) {
+					Console.ForegroundColor = result.Equals(expected) ? ConsoleColor.Green : ConsoleColor.Red;
+				}
+				Console.Write($"{result, 16}");
+				Console.ForegroundColor = backup;
+				Console.Write($"{time, 8:ss\\.fff}");
+
+				return null;
+			} catch (TargetInvocationException ex) {
+				Console.SetOut(stdOut);
+				Console.ForegroundColor = ConsoleColor.Red;
+				Console.Write($"{"Exception thrown.", 24}");
+				return ex.InnerException;
+			} finally {
+				Console.ForegroundColor = backup;
+				Console.SetOut(stdOut);
 			}
-			Console.Write($"{result,16}");
-			Console.ForegroundColor = backup;
-			Console.Write($"{time,8:ss\\.fff}");
 		}
 	}
 }
