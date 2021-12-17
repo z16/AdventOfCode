@@ -29,7 +29,7 @@ internal static class Day08 {
 		mapping[6] = Find(6, mapping[1], 1);
 
 		var reverse = mapping.ToDictionary(kvp => kvp.Value.Order(), kvp => kvp.Key);
-		return output.Reverse().Enumerate().Aggregate(0, (acc, value) => acc + (Int32) Math.Pow(10, value.Index) * reverse.First(kvp => kvp.Key.SequenceEqual(value.Value.Order())).Value);
+		return output.Reverse().Index().Aggregate(0, (acc, value) => acc + (Int32) Math.Pow(10, value.Index) * reverse.First(kvp => kvp.Key.SequenceEqual(value.Value.Order())).Value);
 
 		String Find(Int32 length, String substring, Int32 matches) =>
 			input!.First(token => !mapping.ContainsValue(token) && token.Length == length && token.Intersect(substring).Count() == matches);

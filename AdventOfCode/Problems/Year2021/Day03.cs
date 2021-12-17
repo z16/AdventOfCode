@@ -11,7 +11,7 @@ internal static class Day03 {
 			.Aggregate(Enumerable.Repeat(0, characters), (acc, line) => acc.Zip(line, (count, character) => count + (character - '0')))
 			.Select(count => count > array.Length / 2)
 			.Reverse()
-			.Enumerate()
+			.Index()
 			.Aggregate(0, (acc, value) => acc + (value.Value ? (1 << value.Index) : 0));
 		var epsilon = ~gamma & ((1 << characters) - 1);
 		return gamma * epsilon;

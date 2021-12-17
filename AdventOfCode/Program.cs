@@ -48,7 +48,7 @@ internal class Program {
 
 			Console.WriteLine();
 
-			foreach (var (writer, index) in new[] { writer1, writer2 }.Enumerate()) {
+			foreach (var (writer, index) in new[] { writer1, writer2 }.Index()) {
 				var output = writer.ToString();
 				if (output != String.Empty) {
 					var backup = Console.ForegroundColor;
@@ -61,7 +61,7 @@ internal class Program {
 				}
 			}
 
-			foreach (var (ex, index) in new[] { ex1, ex2 }.Enumerate()) {
+			foreach (var (ex, index) in new[] { ex1, ex2 }.Index()) {
 				if (ex != null) {
 					var backup = Console.ForegroundColor;
 					Console.ForegroundColor = ConsoleColor.Red;
